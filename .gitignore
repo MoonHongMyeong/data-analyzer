@@ -1,2 +1,5 @@
 venv/**
 .idea/**
+__pycache__/**
+analyzer/__pycache__/**
+parser/__pycache__/**
