@@ -6,7 +6,7 @@ from analyzer.analyzer import Analyzer
 
 class MemoryAnalyzer(Analyzer):
 
-    def __init__(self, avg_sec):
+    def __init__(self, avg_sec, queue):
         self.acc_avg = []
         self.acc_rate = 0.0
         self.avg_rate = 0.0
@@ -14,6 +14,7 @@ class MemoryAnalyzer(Analyzer):
         self.pack_format = '@hhfd'
         self.type = 2
         self.sep = 0
+        self._queue = queue
 
     def analyze_data(self, data):
         self.acc_avg.append(data)
@@ -34,9 +35,7 @@ class MemoryAnalyzer(Analyzer):
         self.acc_avg.clear()
 
     def _send_data(self, data):
-        print('-------memory-------')
-        print(data)
-        print(struct.unpack(self.pack_format, data))
+        self._queue.put(data)
 
     def _format_struct_to_data(self):
         send_bytes = struct.pack(self.pack_format, self.type, self.sep, self.avg_rate, time.time())

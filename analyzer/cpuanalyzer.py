@@ -6,7 +6,7 @@ from analyzer.analyzer import Analyzer
 
 class CpuAnalyzer(Analyzer):
 
-    def __init__(self, avg_sec, peak_sec):
+    def __init__(self, avg_sec, peak_sec, queue):
         self.acc_avg = []
         self.acc_peak = []
         self.acc_rate = 0.0
@@ -18,6 +18,7 @@ class CpuAnalyzer(Analyzer):
         self.sep = 0
         self.cpu_rate = 0.0
         self.cpu_timestamp = 0.0
+        self._queue = queue
 
     def analyze_data(self, data):
         self.acc_avg.append(data)
@@ -57,9 +58,7 @@ class CpuAnalyzer(Analyzer):
         self.acc_peak.clear()
 
     def _send_data(self, data):
-        print('-------cpu-------')
-        print(data)
-        print(struct.unpack(self.pack_format, data))
+        self._queue.put(data)
 
     def _format_struct_to_data(self):
         send_bytes = struct.pack(self.pack_format, self.type, self.sep, self.cpu_rate, self.cpu_timestamp)
