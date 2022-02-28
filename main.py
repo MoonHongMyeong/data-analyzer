@@ -13,7 +13,8 @@ from utils.socketserver import Server
 if __name__ == '__main__':
 
     IP = '192.168.1.4'
-    PORT = 8000
+    RECV_PORT = 8000
+    SEND_PORT = 8001
     BUFFER = 16
     PACK_FORMAT = '@hfd'
 
@@ -21,7 +22,7 @@ if __name__ == '__main__':
     MEM_COL_SEC = 5
     STR_COL_SEC = 60
 
-    server = Server(ip=IP, port=PORT)
+    server = Server(ip=IP, port=RECV_PORT)
     que = Queue()
     p = Parser()
     ca = CpuAnalyzer(avg_sec=60 / CPU_COL_SEC,
@@ -34,7 +35,7 @@ if __name__ == '__main__':
     recv_client, recv_address = server.server_accept()
 
     client = Client(que)
-    client.connect('192.168.1.4', 8001)
+    client.connect(ip=IP, port=SEND_PORT)
 
     socket_process = Process(target=client.send)
     socket_process.start()
